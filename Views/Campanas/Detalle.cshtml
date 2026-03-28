@@ -1,13 +1,124 @@
 @model PC1.Models.Campana
 
-<h2>Detalle de Campaña</h2>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Detalle</title>
 
-<p><b>Nombre:</b> @Model.Nombre</p>
-<p><b>Categoría:</b> @Model.Categoria</p>
-<p><b>Estado:</b> @Model.Estado</p>
-<p><b>Canal:</b> @Model.Canal</p>
-<p><b>Descuento:</b> @Model.DescuentoPct %</p>
-<p><b>Fechas:</b> @Model.FechaInicio.ToShortDateString() - @Model.FechaFin.ToShortDateString()</p>
-<p><b>Descripción:</b> @Model.Descripcion</p>
+<style>
+body {
+    font-family: 'Segoe UI', Tahoma;
+    background: linear-gradient(135deg, #eef2ff, #f8fafc);
+    margin: 0;
+    padding: 30px;
+}
 
-<a href="/Campanas">Volver</a>
+.container {
+    max-width: 700px;
+    margin: auto;
+}
+
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    animation: fadeIn 0.4s ease;
+}
+
+@@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+h2 {
+    margin-bottom: 20px;
+    color: #111827;
+}
+
+.badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.vigente { background: #d1fae5; color: #065f46; }
+.proxima { background: #dbeafe; color: #1d4ed8; }
+.finalizada { background: #e5e7eb; color: #374151; }
+
+.item {
+    margin-bottom: 10px;
+    color: #374151;
+}
+
+.label {
+    font-weight: bold;
+    color: #111827;
+}
+
+.descripcion {
+    margin-top: 15px;
+    background: #f3f4f6;
+    padding: 12px;
+    border-radius: 8px;
+}
+
+.btn {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 15px;
+    background: #6366f1;
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    background: #4f46e5;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="card">
+
+        <h2>@Model.Nombre</h2>
+
+        @{
+            var estado = Model.Estado?.ToLower();
+            var clase = "";
+
+            if (estado == "vigente") clase = "vigente";
+            else if (estado == "próxima" || estado == "proxima") clase = "proxima";
+            else if (estado == "finalizada") clase = "finalizada";
+        }
+
+        <span class="badge @clase">@Model.Estado</span>
+
+        <div class="item"><span class="label">Categoría:</span> @Model.Categoria</div>
+        <div class="item"><span class="label">Canal:</span> @Model.Canal</div>
+        <div class="item"><span class="label">Descuento:</span> @Model.DescuentoPct %</div>
+        <div class="item">
+            <span class="label">Fechas:</span>
+            @Model.FechaInicio.ToShortDateString() - @Model.FechaFin.ToShortDateString()
+        </div>
+
+        <div class="descripcion">
+            <span class="label">Descripción:</span><br />
+            @Model.Descripcion
+        </div>
+
+        <a href="/Campanas" class="btn">⬅ Volver</a>
+
+    </div>
+</div>
+
+</body>
+</html>
