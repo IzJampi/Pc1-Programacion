@@ -1,11 +1,142 @@
-<h2>Resumen de Campañas</h2>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Resumen</title>
 
-<p>Total campañas: @ViewBag.Total</p>
-<p>Vigentes: @ViewBag.Vigentes</p>
-<p>Próximas: @ViewBag.Proximas</p>
-<p>Promedio descuento: @ViewBag.Promedio %</p>
+<style>
+body {
+    font-family: 'Segoe UI', Tahoma;
+    background: linear-gradient(135deg, #eef2ff, #f8fafc);
+    margin: 0;
+    padding: 30px;
+}
 
-<h3>Por canal</h3>
-<p>Web: @ViewBag.Web</p>
-<p>App: @ViewBag.App</p>
-<p>Tienda: @ViewBag.Tienda</p>
+.container {
+    max-width: 1000px;
+    margin: auto;
+}
+
+h2 {
+    margin-bottom: 20px;
+    color: #111827;
+}
+
+/* GRID */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+/* CARDS */
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    text-align: center;
+}
+
+.card h3 {
+    margin: 0;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.card p {
+    font-size: 22px;
+    font-weight: bold;
+    margin-top: 10px;
+    color: #111827;
+}
+
+/* CANALES */
+.subgrid {
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.small-card {
+    background: #f3f4f6;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.small-card p {
+    margin: 5px 0;
+}
+
+/* BOTON */
+.btn {
+    display: inline-block;
+    margin-top: 30px;
+    padding: 10px 15px;
+    background: #6366f1;
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+}
+
+.btn:hover {
+    background: #4f46e5;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>📊 Resumen de Campañas</h2>
+
+    <div class="grid">
+        <div class="card">
+            <h3>Total campañas</h3>
+            <p>@ViewBag.Total</p>
+        </div>
+
+        <div class="card">
+            <h3>Vigentes</h3>
+            <p>@ViewBag.Vigentes</p>
+        </div>
+
+        <div class="card">
+            <h3>Próximas</h3>
+            <p>@ViewBag.Proximas</p>
+        </div>
+
+        <div class="card">
+            <h3>Promedio descuento</h3>
+            <p>@String.Format("{0:0.00}", ViewBag.Promedio) %</p>
+        </div>
+    </div>
+
+    <h2 style="margin-top:30px;">📦 Por Canal</h2>
+
+    <div class="subgrid">
+        <div class="small-card">
+            <p>Web</p>
+            <p><b>@ViewBag.Web</b></p>
+        </div>
+
+        <div class="small-card">
+            <p>App</p>
+            <p><b>@ViewBag.App</b></p>
+        </div>
+
+        <div class="small-card">
+            <p>Tienda</p>
+            <p><b>@ViewBag.Tienda</b></p>
+        </div>
+    </div>
+
+    <a href="/Campanas" class="btn">⬅ Volver al listado</a>
+
+</div>
+
+</body>
+</html>
