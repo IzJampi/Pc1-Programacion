@@ -1,51 +1,213 @@
 @model List<PC1.Models.Campana>
+@using System.Linq
 
-<h2>Listado de Campañas</h2>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Campañas</title>
 
-<form method="get">
-    <label>Categoría:</label>
-    <select name="categoria">
-        <option value="">Todas</option>
-        <option>Electro</option>
-        <option>Hogar</option>
-        <option>Moda</option>
-        <option>Tecnología</option>
-    </select>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma;
+            background: linear-gradient(135deg, #eef2ff, #f8fafc);
+            margin: 0;
+            padding: 20px;
+        }
 
-    <label>Estado:</label>
-    <select name="estado">
-        <option value="">Todos</option>
-        <option>Vigente</option>
-        <option>Próxima</option>
-        <option>Finalizada</option>
-    </select>
+        .container {
+            max-width: 1300px;
+            margin: auto;
+        }
 
-    <button type="submit">Filtrar</button>
-</form>
+        h2 {
+            margin-bottom: 20px;
+            color: #111827;
+        }
 
-<table border="1">
-    <tr>
-        <th>Nombre</th>
-        <th>Categoría</th>
-        <th>Estado</th>
-        <th>Canal</th>
-        <th>Descuento</th>
-        <th>Fechas</th>
-        <th></th>
-    </tr>
+        /* BOTON */
+        .top-btn {
+            margin-bottom: 20px;
+        }
 
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>@item.Nombre</td>
-            <td>@item.Categoria</td>
-            <td>@item.Estado</td>
-            <td>@item.Canal</td>
-            <td>@item.DescuentoPct %</td>
-            <td>@item.FechaInicio.ToShortDateString() - @item.FechaFin.ToShortDateString()</td>
-            <td>
-                <a href="/Campanas/Detalle/@item.Id">Ver detalle</a>
-            </td>
-        </tr>
-    }
-</table>
+        .top-btn a {
+            background: #6366f1;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        /* FILTRO */
+        form {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        select, button {
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            background: #6366f1;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* GRID */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        /* CARD */
+        .card {
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 18px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-header h3 {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        /* BADGES */
+        .badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .vigente { background: #d1fae5; color: #065f46; }
+        .proxima { background: #dbeafe; color: #1d4ed8; }
+        .finalizada { background: #e5e7eb; color: #374151; }
+
+        /* INFO */
+        .info {
+            margin-top: 10px;
+            font-size: 13px;
+            color: #555;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .canal {
+            margin-top: 10px;
+            display: inline-block;
+            background: #e5e7eb;
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-size: 12px;
+        }
+
+        /* BOTON DETALLE */
+        .btn-detalle {
+            display: block;
+            margin-top: 15px;
+            text-align: center;
+            padding: 10px;
+            background: #e5e7eb;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #333;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .btn-detalle:hover {
+            background: #d1d5db;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>🎯 Campañas Comerciales</h2>
+
+    <div class="top-btn">
+        <a href="/Campanas/Resumen">Ver Resumen</a>
+    </div>
+
+    <form method="get">
+        <select name="categoria">
+            <option value="">Todas las categorías</option>
+            <option>Electro</option>
+            <option>Hogar</option>
+            <option>Moda</option>
+            <option>Tecnología</option>
+        </select>
+
+        <select name="estado">
+            <option value="">Todos los estados</option>
+            <option>Vigente</option>
+            <option>Próxima</option>
+            <option>Finalizada</option>
+        </select>
+
+        <button type="submit">Filtrar</button>
+    </form>
+
+    <div class="grid">
+        @foreach (var item in Model)
+        {
+            var estado = item.Estado?.ToLower();
+            var claseEstado = "";
+
+            if (estado == "vigente") claseEstado = "vigente";
+            else if (estado == "próxima" || estado == "proxima") claseEstado = "proxima";
+            else if (estado == "finalizada") claseEstado = "finalizada";
+
+            <div class="card">
+
+                <div class="card-header">
+                    <h3>@item.Nombre</h3>
+                    <span class="badge @claseEstado">@item.Estado</span>
+                </div>
+
+                <div class="info">
+                    <span>📂 @item.Categoria</span>
+                    <span>💸 @item.DescuentoPct %</span>
+                    <span>📅 @item.FechaInicio.ToShortDateString()</span>
+                </div>
+
+                <div class="canal">@item.Canal</div>
+
+                <a href="/Campanas/Detalle/@item.Id" class="btn-detalle">
+                    Ver detalle
+                </a>
+
+            </div>
+        }
+    </div>
+
+</div>
+
+</body>
+</html>
