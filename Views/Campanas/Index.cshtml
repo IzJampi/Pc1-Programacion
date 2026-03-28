@@ -1,0 +1,51 @@
+@model List<PC1.Models.Campana>
+
+<h2>Listado de Campañas</h2>
+
+<form method="get">
+    <label>Categoría:</label>
+    <select name="categoria">
+        <option value="">Todas</option>
+        <option>Electro</option>
+        <option>Hogar</option>
+        <option>Moda</option>
+        <option>Tecnología</option>
+    </select>
+
+    <label>Estado:</label>
+    <select name="estado">
+        <option value="">Todos</option>
+        <option>Vigente</option>
+        <option>Próxima</option>
+        <option>Finalizada</option>
+    </select>
+
+    <button type="submit">Filtrar</button>
+</form>
+
+<table border="1">
+    <tr>
+        <th>Nombre</th>
+        <th>Categoría</th>
+        <th>Estado</th>
+        <th>Canal</th>
+        <th>Descuento</th>
+        <th>Fechas</th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Nombre</td>
+            <td>@item.Categoria</td>
+            <td>@item.Estado</td>
+            <td>@item.Canal</td>
+            <td>@item.DescuentoPct %</td>
+            <td>@item.FechaInicio.ToShortDateString() - @item.FechaFin.ToShortDateString()</td>
+            <td>
+                <a href="/Campanas/Detalle/@item.Id">Ver detalle</a>
+            </td>
+        </tr>
+    }
+</table>
